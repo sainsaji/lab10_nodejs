@@ -1,45 +1,59 @@
-const express = require("express");
-const app = express();
-app.get("/", function (req, res) {
-    res.sendFile(__dirname + "/index.html");
-});
-app.listen(3000, function () {
-    console.log("Server is running on localhost3000");
-});
-
-
-const fs = require("fs");
-   
-// Read users.json file
-fs.readFile("data.json", function(err, data) {
-    // Check for errors
-    if (err) throw err;
-    // Converting to JSON
-    const users = JSON.parse(data);
-    console.log(users); // Print users 
-});
-
-// STEP 1: Reading JSON file
-const users = require("./data.json");
-   
-// Defining new user
-var user = 
-    {
-    ID: 9,
-    Name: "Sree Kanth",
-    sname:"4 Wheeler",
-    sfee:12000,
-}
-;
-   
-// STEP 2: Adding new data to users object
-users.push(user);
-   
-// STEP 3: Writing to a file
-fs.writeFile("data.json", JSON.stringify(users), err => {
-     
-    // Checking for errors
-    if (err) throw err; 
-   
-    console.log("Done writing"); // Success
+var app = angular.module('myApp', ['ngRoute']);
+ 
+app.config(function($routeProvider) {
+$routeProvider
+ 
+.when('/', {
+templateUrl : 'page1.html',
+controller : 'FirstController'}).when('/index/:first/:last',
+{
+    templateUrl:'index.html',
+    controller:'FirstController'
 })
+ 
+.when('/database', {
+templateUrl : 'page2.html',
+controller : 'SecondController'
+})
+ 
+.when('/databasewithsearch', {
+templateUrl : 'page3.html',
+controller : 'ThirdController'
+})
+ 
+.otherwise({redirectTo: '/'});
+});
+
+    app.controller('FirstController', function($scope,$routeParams) {
+    $scope.message = 'A one stop solution for all road side Assistance.'
+    $scope.compname = 'Automania Tow Services'
+    });
+
+     
+    app.controller('SecondController', ['$scope', '$http', function($scope, $http)  {
+        $scope.userData = undefined;
+        var req = {
+            method: 'GET',
+            url: 'data.json',
+            headers: { 'Content-Type': 'application/json' }
+        };
+        
+        
+        $http(req).then(function (response) {
+            $scope.userData  = response.data;
+        });
+      }]);
+     
+      app.controller('ThirdController', ['$scope', '$http', function($scope, $http)  {
+        $scope.userData = undefined;
+        var req = {
+            method: 'GET',
+            url: 'data.json',
+            headers: { 'Content-Type': 'application/json' }
+        };
+        
+        
+        $http(req).then(function (response) {
+            $scope.userData  = response.data;
+        });
+      }]);
